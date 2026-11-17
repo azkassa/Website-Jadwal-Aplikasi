@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jadwal Saya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap" id="app" hidden>
+  <header class="top">
+    <div>
+      <h1 id="today">Hari ini</h1>
+      <p class="sub" id="summary"></p>
+    </div>
+    <div class="actions">
+      <span class="who" id="who"></span>
+      <button class="btn ghost icon" id="theme" aria-label="Ganti tema">◐</button>
+      <button class="btn ghost" id="logout">Keluar</button>
+      <button class="btn" id="add">Tambah tugas</button>
+    </div>
+  </header>
+
+  <div class="recap" id="recap" hidden></div>
+
+  <section class="bento" aria-label="Ringkasan">
+    <div class="tile next" id="next"></div>
+    <div class="tile prog" id="prog"></div>
+    <div class="tile week"><div class="days" id="days"></div></div>
+  </section>
+
+  <div class="tools">
+    <h2 id="listTitle">Semua tugas</h2>
+    <input class="search" id="q" type="search" placeholder="Cari tugas" aria-label="Cari tugas">
+  </div>
+  <div class="chips" id="chips"></div>
+  <div id="list"></div>
+</div>
+
+<main class="auth" id="auth" hidden>
+  <section class="tile pitch">
+    <div class="peek" aria-hidden="true">
+      <div class="peek-top">
+        <div class="peek-ring"><svg viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="26"/><circle cx="32" cy="32" r="26" stroke-dasharray="163.4" stroke-dashoffset="40.85"/></svg><b>75%</b></div>
+        <p>3 dari 4 tugas minggu ini selesai</p>
+      </div>
+      <div class="peek-card"><i class="dot" style="--c:#4F7CFF"></i><div><b>Laporan praktikum</b><small>Kuliah</small></div><span>5 jam lagi</span></div>
+      <div class="peek-card done"><i class="dot" style="--c:#12A07A"></i><div><b>Rapat mingguan tim</b><small>Kerja</small></div><span>Selesai</span></div>
+      <div class="peek-card"><i class="dot" style="--c:#B849C9"></i><div><b>Presentasi demo proyek</b><small>Proyek</small></div><span>3 hari lagi</span></div>
+    </div>
+    <h2 class="big">Semua deadline, satu tempat.</h2>
+    <p>Masuk untuk melanjutkan. Rekap terakhirmu tampil begitu kamu kembali.</p>
+  </section>
+  <section class="tile card">
+    <div class="tabs">
+      <button type="button" data-go="in" aria-pressed="true">Masuk</button>
+      <button type="button" data-go="up" aria-pressed="false">Daftar</button>
+    </div>
+    <h2 id="authTitle">Selamat datang kembali</h2>
+
+    <form class="authform" id="fIn">
+      <label>Username<input class="f" id="inUser" required autocomplete="username"></label>
+      <label>Password<input class="f" id="inPass" type="password" required autocomplete="current-password"></label>
+      <div class="inline">
+        <label class="check-row"><input type="checkbox" id="inRemember"> Ingat saya</label>
+        <button type="button" class="link" data-go="forgot">Lupa password?</button>
+      </div>
+      <p class="err" role="alert"></p>
+      <button class="btn wide" type="submit">Masuk</button>
+    </form>
+
+    <form class="authform" id="fUp" hidden>
+      <label>Nama<input class="f" id="upName" required maxlength="40" autocomplete="name"></label>
+      <label>Username<input class="f" id="upUser" required maxlength="20" autocomplete="username"></label>
+      <label>Password (minimal 8 karakter)<input class="f" id="upPass" type="password" required autocomplete="new-password"></label>
+      <label>Pertanyaan keamanan<select class="f" id="upQ"></select></label>
+      <label>Jawaban<input class="f" id="upAns" required maxlength="60" autocomplete="off"></label>
+      <p class="hint">Pertanyaan ini dipakai untuk mengganti password jika kamu lupa.</p>
+      <p class="err" role="alert"></p>
+      <button class="btn wide" type="submit">Buat akun</button>
+    </form>
+
+    <form class="authform" id="fFg" hidden>
+      <label>Username<input class="f" id="fgUser" required autocomplete="username"></label>
+      <div id="fgStep2" hidden>
+        <p class="q" id="fgQ"></p>
+        <label>Jawaban<input class="f" id="fgAns" autocomplete="off"></label>
+        <label>Password baru<input class="f" id="fgPass" type="password" autocomplete="new-password"></label>
+        <label>Ulangi password baru<input class="f" id="fgPass2" type="password" autocomplete="new-password"></label>
+      </div>
+      <p class="err" role="alert"></p>
+      <button class="btn wide" id="fgGo" type="submit">Lanjut</button>
+      <div class="inline back"><button type="button" class="link" data-go="in">Kembali ke masuk</button></div>
+    </form>
+
+    <p class="hint">Akun disimpan di browser ini saja, tanpa server atau email.</p>
+  </section>
+</main>
+
+<dialog id="dlg">
+  <form id="form">
+    <h2 id="dlgTitle">Tugas baru</h2>
+    <label>Nama tugas<input class="f" id="fTitle" required maxlength="120" placeholder="Contoh: Kumpulkan laporan"></label>
+    <div class="two">
+      <label>Tanggal<input class="f" id="fDate" type="date" required></label>
+      <label>Jam<input class="f" id="fTime" type="time"></label>
+    </div>
+    <div class="two">
+      <label>Kategori<select class="f" id="fCat"></select></label>
+      <label>Prioritas<select class="f" id="fPri"><option value="tinggi">Tinggi</option><option value="sedang" selected>Sedang</option><option value="rendah">Rendah</option></select></label>
+    </div>
+    <label>Catatan<textarea class="f" id="fNote" rows="2" maxlength="300"></textarea></label>
+    <div class="foot">
+      <button type="button" class="btn ghost" id="cancel">Batal</button>
+      <button class="btn" type="submit">Simpan</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" hidden role="status"><span id="toastMsg"></span><button id="undo" hidden>Urungkan</button></div>
+
+<script src="script.js"></script>
+</body>
+</html>
